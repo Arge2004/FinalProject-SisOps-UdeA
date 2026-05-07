@@ -3,7 +3,7 @@ use surge_ping::{Client, Config, PingIdentifier, PingSequence};
 use std::net::IpAddr;
 use std::time::Duration;
 
-use crate::internal::ports::scanner::scan_ports;
+use crate::internal::ports::scanner::scan_all_ports;
 use crate::internal::reporter::models::HostResult;
 
 pub async fn discover_host(ip: String) -> Option<HostResult> {
@@ -29,14 +29,16 @@ pub async fn discover_host(ip: String) -> Option<HostResult> {
     match pinger.ping(PingSequence(0), &[]).await {
 
         Ok((_packet, duration)) => {
-            let open_ports =
-                scan_ports(ip.clone()).await;
+            let scan_result =
+                scan_all_ports(
+                    ip.clone()
+                ).await;
             Some(
                 HostResult {
                     ip,
                     latency: duration
                         .as_millis(),
-                    open_ports,
+                    scan_result,
                 }
             )
         }

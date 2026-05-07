@@ -1,6 +1,6 @@
 use std::sync::Arc;
-
 use tokio::sync::Semaphore;
+use std::time::Instant;
 
 use rust_network_scanner::internal::network::ipcalc::{
     get_local_ip,
@@ -21,6 +21,7 @@ use rust_network_scanner::internal::reporter::models::{
 
 #[tokio::main]
 async fn main() {
+    let start = Instant::now();
 
     println!("Rust Network Scanner");
 
@@ -69,6 +70,15 @@ async fn main() {
     });
 
     print_report(&active_hosts);
+    
+    let elapsed = start.elapsed();
+
+    println!();
+
+    println!(
+        "Tiempo total de escaneo: {:.2} segundos",
+        elapsed.as_secs_f64()
+    );  
 
     println!();
 

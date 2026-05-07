@@ -1,6 +1,11 @@
-use crate::internal::reporter::models::HostResult;
+use crate::internal::reporter::models::{
+    HostResult,
+    PortResult
+};
 
-pub fn print_report(results: &Vec<HostResult>) {
+pub fn print_report(
+    results: &Vec<HostResult>
+) {
 
     println!();
 
@@ -22,21 +27,53 @@ pub fn print_report(results: &Vec<HostResult>) {
             host.latency
         );
 
-        if host.open_ports.is_empty() {
+        // TCP
+        println!();
 
-            println!("SIN PUERTOS ABIERTOS");
+        println!("TCP:");
+
+        if host
+            .scan_result
+            .tcp_ports
+            .is_empty() {
+
+            println!(
+                "  SIN PUERTOS TCP ABIERTOS"
+            );
 
         } else {
 
-            println!("PUERTOS ABIERTOS:");
+            for port in
+                &host
+                .scan_result
+                .tcp_ports {
 
-            for port in &host.open_ports {
+                print_port(port);
+            }
+        }
 
-                println!(
-                    "  {} -> {}",
-                    port.port,
-                    port.service
-                );
+        // UDP
+        println!();
+
+        println!("UDP:");
+
+        if host
+            .scan_result
+            .udp_ports
+            .is_empty() {
+
+            println!(
+                "  SIN PUERTOS UDP ABIERTOS"
+            );
+
+        } else {
+
+            for port in
+                &host
+                .scan_result
+                .udp_ports {
+
+                print_port(port);
             }
         }
 
@@ -44,4 +81,14 @@ pub fn print_report(results: &Vec<HostResult>) {
             "--------------------------------"
         );
     }
+}
+
+fn print_port(
+    port: &PortResult
+) {
+    println!(
+        "  {} -> {}",
+        port.port,
+        port.service
+    );
 }

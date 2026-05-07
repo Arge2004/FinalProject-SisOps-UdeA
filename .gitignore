@@ -1,6 +1,7 @@
 # Rust build artifacts
 target/
 rust-network-scanner/target/
+rust-network-scanner/cargo.lock
 
 # Go build artifacts
 **/*.exe
